@@ -8,15 +8,16 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Vars;
+import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.DriveTrainSub;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class autoDropBackUp extends SequentialCommandGroup {
   /** Creates a new autoDropBackUp. */
-  public autoDropBackUp(DrivetrainSubsystem drive, Claw claw) {
+  public autoDropBackUp(DriveTrainSub drive, Claw claw) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(

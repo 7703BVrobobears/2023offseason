@@ -16,12 +16,13 @@ import frc.robot.commands.moveArmPercent;
 import frc.robot.commands.openClaw;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.DriveTrainSub;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -35,11 +36,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
+  private final DriveTrainSub driveTrainSys = new DriveTrainSub();
   private final Claw claw = new Claw();
   private final openClaw m_openClaw = new openClaw(claw);
   private final closeClaw m_closeClaw = new closeClaw(claw);
-  private final SequentialCommandGroup m_Auto = new SequentialCommandGroup(new DriveCommand(drivetrain, ()->0.4, ()->0));
+  private final SequentialCommandGroup m_Auto = new SequentialCommandGroup(new DriveCommand(driveTrainSys, ()->0.4, ()->0));
   private final ArmSubsystem m_arm = new ArmSubsystem();
   private final extendArmPercent m_extendOut = new extendArmPercent(m_arm, Vars.ARM_EXTENSION_MID_PERCENT);
   private final extendArmPercent m_extendIn = new extendArmPercent(m_arm, Vars.ARM_EXTENSION_OPPOSITE_MID_PERCENT);
@@ -53,14 +54,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     System.out.println(m_driverController.getLeftX());
-    drivetrain.setDefaultCommand(
-      new DriveCommand(
-        drivetrain,
-        () -> m_driverController.getLeftY(),
-        () -> m_driverController.getRightX()
-      )
     
-    );
     m_arm.setDefaultCommand(
       new moveArmPercent(m_arm, ()->(m_driverController.getLeftTriggerAxis() - m_driverController.getRightTriggerAxis()) * Vars.ARM_SCALAR)
     );
@@ -84,6 +78,13 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
+        driveTrainSys.setDefaultCommand(
+          new RunCommand(
+            ()->driveTrainSys.drive(
+              -m_driverController.getLeftX(),
+              -m_driverController.getRightY())
+            , driveTrainSys));
+
     m_driverController.a().onTrue(new openClaw(claw));
     m_driverController.b().onTrue(new closeClaw(claw));
     m_driverController.leftBumper().whileTrue(m_extendIn);
@@ -99,7 +100,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-     return new autoDropBackUp(drivetrain, claw);
+     return new autoDropBackUp(driveTrainSys, claw);
   }
 
   public Claw getClaw() {
