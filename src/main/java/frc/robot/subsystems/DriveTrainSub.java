@@ -23,8 +23,8 @@ public class DriveTrainSub extends SubsystemBase {
     m_backRight = new WPI_VictorSPX(DriveTrainConstants.kBackRight);
     m_motorLeft = new MotorControllerGroup(m_backLeft, m_frontLeft);
     m_motorRight = new MotorControllerGroup(m_frontRight, m_backRight);
-    m_motorLeft.setInverted(true);
-    m_motorRight.setInverted(false);
+    m_motorLeft.setInverted(false);
+    m_motorRight.setInverted(true);
     m_difDrive = new DifferentialDrive(m_motorLeft, m_motorRight);
   }
 

@@ -55,9 +55,9 @@ public class RobotContainer {
     configureBindings();
     System.out.println(m_driverController.getLeftX());
     
-    m_arm.setDefaultCommand(
-      new moveArmPercent(m_arm, ()->(m_driverController.getLeftTriggerAxis() - m_driverController.getRightTriggerAxis()) * Vars.ARM_SCALAR)
-    );
+    // m_arm.setDefaultCommand(
+    //   new moveArmPercent(m_arm, ()->(m_driverController.getLeftTriggerAxis() - m_driverController.getRightTriggerAxis()) * Vars.ARM_SCALAR)
+    // );
 
     
 
@@ -81,14 +81,14 @@ public class RobotContainer {
         driveTrainSys.setDefaultCommand(
           new RunCommand(
             ()->driveTrainSys.drive(
-              -m_driverController.getLeftX(),
-              -m_driverController.getRightY())
+              -m_driverController.getLeftY(),
+              -m_driverController.getRightX())
             , driveTrainSys));
 
-    m_driverController.a().onTrue(new openClaw(claw));
-    m_driverController.b().onTrue(new closeClaw(claw));
-    m_driverController.leftBumper().whileTrue(m_extendIn);
-    m_driverController.rightBumper().whileTrue(m_extendOut);
+    // m_driverController.a().onTrue(new openClaw(claw));
+    // m_driverController.b().onTrue(new closeClaw(claw));
+    // m_driverController.leftBumper().whileTrue(m_extendIn);
+    // m_driverController.rightBumper().whileTrue(m_extendOut);
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
   }
@@ -100,7 +100,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-     return new autoDropBackUp(driveTrainSys, claw);
+    //  return new autoDropBackUp(driveTrainSys, claw);
+    return null;
   }
 
   public Claw getClaw() {
