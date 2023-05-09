@@ -85,10 +85,10 @@ public class RobotContainer {
               -m_driverController.getRightX())
             , driveTrainSys));
 
-    // m_driverController.a().onTrue(new openClaw(claw));
-    // m_driverController.b().onTrue(new closeClaw(claw));
-    // m_driverController.leftBumper().whileTrue(m_extendIn);
-    // m_driverController.rightBumper().whileTrue(m_extendOut);
+    m_driverController.a().onTrue(new openClaw(claw));
+    m_driverController.b().onTrue(new closeClaw(claw));
+    m_driverController.leftBumper().whileTrue(m_extendIn);
+    m_driverController.rightBumper().whileTrue(m_extendOut);
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
   }
