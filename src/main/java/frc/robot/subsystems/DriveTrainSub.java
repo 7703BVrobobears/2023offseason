@@ -4,36 +4,53 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.motorcontrol.Victor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DriveTrainConstants;
+import frc.robot.RobotMap;
 
 public class DriveTrainSub extends SubsystemBase {
-  /** Creates a new DriveTrainSub. */
-  private final WPI_VictorSPX m_frontLeft, m_frontRight, m_backLeft, m_backRight;
-  private final MotorControllerGroup m_motorLeft, m_motorRight;
-  private final DifferentialDrive m_difDrive;
+  /** Creates a new DrivetrainSubsystem. */
+
+  private final WPI_VictorSPX m_frontLeft, m_frontRight, m_rearLeft, m_rearRight;
+  private final MotorControllerGroup m_left, m_right;
+  private final DifferentialDrive m_drive;
+  private final SlewRateLimiter m_rateLimiter;
+
   public DriveTrainSub() {
-    m_frontLeft = new WPI_VictorSPX(DriveTrainConstants.kFrontLeft);
-    m_frontRight = new WPI_VictorSPX(DriveTrainConstants.kFrontRight);
-    m_backLeft = new WPI_VictorSPX(DriveTrainConstants.kBackLeft);
-    m_backRight = new WPI_VictorSPX(DriveTrainConstants.kBackRight);
+    m_frontLeft = new WPI_VictorSPX(RobotMap.ID_FRONT_LEFT);
+    m_frontRight = new WPI_VictorSPX(RobotMap.ID_FRONT_RIGHT);
+    m_rearLeft = new WPI_VictorSPX(RobotMap.ID_REAR_LEFT);
+    m_rearRight = new WPI_VictorSPX(RobotMap.ID_REAR_RIGHT);
+
+    m_left = new MotorControllerGroup(m_frontLeft, m_rearLeft);
+    m_right = new MotorControllerGroup(m_frontRight, m_rearRight);
+    m_left.setInverted(true);
+    m_right.setInverted(false);
+
+    m_drive = new DifferentialDrive(m_left, m_right);
+    m_drive.setDeadband(0.02);
+    m_drive.setMaxOutput(1.0
     
-    m_motorLeft = new MotorControllerGroup(m_backLeft, m_frontLeft);
-    m_motorRight = new MotorControllerGroup(m_frontRight, m_backRight);
-    m_motorLeft.setInverted(false);
-    m_motorRight.setInverted(true);
-    m_difDrive = new DifferentialDrive(m_motorLeft, m_motorRight);
+    );
+
+    m_rateLimiter = new SlewRateLimiter(0.9, -0.9, 1);
+    
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
-  public void drive(double xDrive, double zRot){
-    m_difDrive.arcadeDrive(xDrive, zRot);
+
+  public void arcadeDrive(double left, double right) {
+    m_drive.arcadeDrive(left, right);
   }
+
+
 }
